@@ -1,0 +1,24 @@
+[[PAGE:1]]
+COMPLETE BLOOD COUNT
+Hemoglobin 13.8 g/dL 12.0 - 16.0
+RBC Count 4.7 million/cumm 4.0 - 5.5
+Hematocrit 41 % 36 - 46
+MCV 87 fL 80 - 100
+WBC 7.2 10^3/uL 4.0 - 11.0
+Platelet Count 250 10^3/uL 150 - 450
+[[PAGE:2]]
+KIDNEY FUNCTION
+Blood Urea 25 mg/dL 15 - 40
+Creatinine 0.9 mg/dL 0.6 - 1.2
+[[PAGE:3]]
+LIPID PROFILE
+Total Cholesterol 218 mg/dL 0 - 200
+HDL Cholesterol 48 mg/dL 40 - 60
+LDL Cholesterol 142 mg/dL 0 - 130
+[[PAGE:4]]
+LIVER FUNCTION
+ALT (SGPT) 32 U/L 0 - 45
+AST (SGOT) 28 U/L 0 - 40
+[[PAGE:5]]
+THYROID PROFILE
+TSH 2.1 uIU/mL 0.4 - 4.5

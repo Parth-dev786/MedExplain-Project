@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="{{ language|default('en') }}">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MedExplain · Complete Medical Report</title>
+<style>
+:root{--blue:#1769aa;--ink:#17324d;--muted:#60758a;--line:#e3ebf2;--bg:#f3f7fb;--green:#16845b;--red:#c13e4b;--amber:#a86a13}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 Inter,system-ui,-apple-system,Segoe UI,sans-serif}
+.wrap{max-width:1040px;margin:0 auto;padding:28px 18px 56px}.brand{display:flex;align-items:center;gap:10px;font-weight:800;color:var(--blue);margin-bottom:24px}.mark{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:#e4f2ff;font-size:22px}
+.hero{background:linear-gradient(135deg,#0f5f9e,#278dca);color:white;padding:30px;border-radius:22px;box-shadow:0 12px 32px #174b7020}.eyebrow{font-size:12px;letter-spacing:.13em;text-transform:uppercase;opacity:.82;font-weight:700}.hero h1{margin:8px 0;font-size:clamp(25px,4vw,36px);line-height:1.2}.hero p{margin:5px 0;color:#e9f5ff}.meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}.meta span{background:#ffffff20;border:1px solid #ffffff35;padding:7px 11px;border-radius:9px;font-size:13px}
+.panel{background:white;border:1px solid var(--line);border-radius:17px;padding:22px;margin-top:18px;box-shadow:0 5px 20px #163c5a08}.panel h2{margin:0 0 12px;font-size:20px}.muted{color:var(--muted)}.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.stat{background:#f6faff;border:1px solid #e6f0f8;border-radius:13px;padding:15px}.stat b{display:block;font-size:25px;color:var(--blue)}.stat small{color:var(--muted)}
+.parameter-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.parameter{border:1px solid var(--line);border-radius:14px;padding:16px;break-inside:avoid}.param-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}.parameter h3{margin:0;font-size:16px}.value{font-size:23px;font-weight:800;margin:8px 0 2px}.range,.small{font-size:13px;color:var(--muted)}.status{display:inline-block;border-radius:30px;padding:4px 9px;font-size:11px;font-weight:800;background:#edf2f6;color:#53677a}.normal{background:#e7f7ef;color:var(--green)}.high,.low{background:#fff0f0;color:var(--red)}.review{background:#fff6e6;color:var(--amber)}.detail{border-top:1px solid #edf1f5;margin-top:12px;padding-top:10px}.detail p{margin:7px 0}.finding{border-left:4px solid var(--red);padding:12px 14px;background:#fff7f7;border-radius:0 10px 10px 0;margin:10px 0}.finding h3{margin:0 0 4px;font-size:15px}.notice{background:#fff8e9;border:1px solid #f2dfb8;border-radius:13px;padding:15px;color:#694e20}.footer{text-align:center;color:var(--muted);font-size:12px;margin-top:24px}
+.consent{display:block;margin:18px 0}.btn{border:0;border-radius:10px;padding:12px 18px;background:var(--blue);color:#fff;font-weight:700;cursor:pointer}.invalid{background:white;border-radius:18px;padding:30px;text-align:center}
+@media(max-width:680px){.wrap{padding:18px 12px 36px}.hero{padding:23px 19px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.parameter-grid{grid-template-columns:1fr}.panel{padding:17px}}
+@media print{body{background:white}.wrap{max-width:none;padding:0}.panel,.hero{box-shadow:none;break-inside:avoid}.consent,.btn{display:none!important}}
+</style>
+</head>
+<body><main class="wrap">
+{% set labels = {
+'en': {'title':'Complete Report Analysis','summary':'Complete Report Summary','params':'Medical Parameters & Explanations','abnormal':'Abnormal Values & Important Findings','insights':'AI-Based Health Insights','recommend':'Recommendations & Next Steps','info':'Report Information','view':'View complete report','consent':'I confirm I have the patient permission to view this medical information.','detected':'Parameters detected','normal':'Within lab range','flagged':'Outside lab range','review':'Needs review','area':'Area','measures':'What it measures','interpretation':'Interpretation','guidance':'General guidance','disclaimer':'Medical disclaimer'},
+'hi': {'title':'पूरी रिपोर्ट का विश्लेषण','summary':'पूरी रिपोर्ट का सारांश','params':'मेडिकल पैरामीटर और उनकी व्याख्या','abnormal':'असामान्य मान और महत्वपूर्ण निष्कर्ष','insights':'AI आधारित स्वास्थ्य जानकारी','recommend':'सुझाव और अगले कदम','info':'रिपोर्ट की जानकारी','view':'पूरी रिपोर्ट देखें','consent':'मैं पुष्टि करता/करती हूँ कि मुझे यह मेडिकल जानकारी देखने की अनुमति है।','detected':'पैरामीटर मिले','normal':'सामान्य सीमा में','flagged':'सामान्य सीमा से बाहर','review':'जांच आवश्यक','area':'क्षेत्र','measures':'यह क्या मापता है','interpretation':'व्याख्या','guidance':'सामान्य मार्गदर्शन','disclaimer':'चिकित्सा अस्वीकरण'},
+'pa': {'title':'ਪੂਰੀ ਰਿਪੋਰਟ ਦਾ ਵਿਸ਼ਲੇਸ਼ਣ','summary':'ਪੂਰੀ ਰਿਪੋਰਟ ਦਾ ਸਾਰ','params':'ਮੈਡੀਕਲ ਪੈਰਾਮੀਟਰ ਅਤੇ ਵਿਆਖਿਆ','abnormal':'ਅਸਧਾਰਨ ਮੁੱਲ ਅਤੇ ਮਹੱਤਵਪੂਰਨ ਨਤੀਜੇ','insights':'AI ਆਧਾਰਿਤ ਸਿਹਤ ਜਾਣਕਾਰੀ','recommend':'ਸੁਝਾਅ ਅਤੇ ਅਗਲੇ ਕਦਮ','info':'ਰਿਪੋਰਟ ਦੀ ਜਾਣਕਾਰੀ','view':'ਪੂਰੀ ਰਿਪੋਰਟ ਵੇਖੋ','consent':'ਮੈਂ ਪੁਸ਼ਟੀ ਕਰਦਾ/ਕਰਦੀ ਹਾਂ ਕਿ ਮੈਨੂੰ ਇਹ ਮੈਡੀਕਲ ਜਾਣਕਾਰੀ ਵੇਖਣ ਦੀ ਇਜਾਜ਼ਤ ਹੈ।','detected':'ਮਿਲੇ ਪੈਰਾਮੀਟਰ','normal':'ਆਮ ਸੀਮਾ ਵਿੱਚ','flagged':'ਆਮ ਸੀਮਾ ਤੋਂ ਬਾਹਰ','review':'ਜਾਂਚ ਲੋੜੀਂਦੀ','area':'ਖੇਤਰ','measures':'ਇਹ ਕੀ ਮਾਪਦਾ ਹੈ','interpretation':'ਵਿਆਖਿਆ','guidance':'ਆਮ ਮਾਰਗਦਰਸ਼ਨ','disclaimer':'ਮੈਡੀਕਲ ਅਸਵੀਕਰਨ'}
+} %}
+{% set L = labels.get(language|default('en'), labels['en']) %}
+
+<div class="brand"><span class="mark">✚</span><span>MedExplain <span class="muted">· QR Passport</span></span></div>
+{% if invalid or not reports %}
+<section class="invalid"><h1>QR Passport unavailable</h1><p class="muted">This link is invalid, has been revoked, or the shared report is no longer available. Ask the report owner to generate a new QR Passport.</p></section>
+{% else %}
+{% for report in reports %}
+<section class="hero">
+<div class="eyebrow">Securely shared medical report</div>
+<h1>{{ L.title }}</h1>
+<p>{{ report.filename }}</p>
+<div class="meta"><span>Report ID · {{ report.id[:12] }}</span><span>Report date · {{ report.created_at[:10] }}</span><span>Generated · {{ report.created_at[:10] }}</span></div>
+</section>
+<label class="consent"><input type="checkbox" id="consent"> {{ L.consent }}</label>
+<button class="btn" id="showRecords" disabled>{{ L.view }}</button>
+<div id="records" hidden>
+<section class="panel"><h2>{% if language=='hi' %}रिपोर्ट का सारांश{% elif language=='pa' %}ਰਿਪੋਰਟ ਦਾ ਸਾਰ{% else %}{{ L.summary }}{% endif %}</h2>
+<div class="stats">
+<div class="stat"><b>{{ report.summary.get('total',0) }}</b><small>{{ L.detected }}</small></div>
+<div class="stat"><b>{{ report.summary.get('normal',0) }}</b><small>{{ L.normal }}</small></div>
+<div class="stat"><b>{{ report.summary.get('flagged',0) }}</b><small>{{ L.flagged }}</small></div>
+<div class="stat"><b>{{ report.summary.get('needs_review',0) }}</b><small>{{ L.review }}</small></div>
+</div>
+<p class="muted">This report contains {{ report.summary.get('total',0) }} extracted parameters across {{ report.summary.get('pages_scanned',1) }} page(s): {{ report.summary.get('normal',0) }} are within the printed lab ranges, {{ report.summary.get('flagged',0) }} are outside those ranges, and {{ report.summary.get('needs_review',0) }} need manual review. Results are presented with the explanations and educational notes generated by MedExplain.</p>
+</section>
+<section class="panel"><h2>{{ L.params }}</h2>
+{% if report.results %}
+<div class="parameter-grid">
+{% for item in report.results %}
+{% set st=item.status|default('Needs review') %}
+{% set cls='normal' if st=='Within lab range' else ('high' if st=='Above lab range' else ('low' if st=='Below lab range' else 'review')) %}
+<article class="parameter">
+<div class="param-head"><h3>{{ item.name }}</h3><span class="status {{ cls }}">{{ st }}</span></div>
+<div class="value">{{ item.value }} {{ item.unit }}</div>
+<div class="range">Reference range: {% if item.low is defined and item.high is defined and item.low is not none and item.high is not none %}{{ item.low }} – {{ item.high }}{% else %}Not reliably detected in source report{% endif %}</div>
+<div class="detail">
+{% if item.organ %}<p><b>{{ L.area }}:</b> {{ item.organ }}</p>{% endif %}
+{% if item.about %}<p><b>{{ L.measures }}:</b> {{ item.about }}</p>{% endif %}
+{% if item.explanation %}<p><b>{{ L.interpretation }}:</b> {{ item.explanation }}</p>{% endif %}
+{% if item.lifestyle %}<p><b>{{ L.guidance }}:</b> {{ item.lifestyle }}</p>{% endif %}
+<p class="small">Source page: {{ item.page|default('Not available') }} · Extraction confidence: {{ item.confidence|default('Not available') }}</p>
+</div></article>
+{% endfor %}
+</div>
+{% else %}<p class="muted">No supported medical parameters were extracted from this report.</p>{% endif %}
+</section>
+<section class="panel"><h2>{{ L.abnormal }}</h2>
+{% set abnormal = report.results|selectattr('status','in',['Below lab range','Above lab range'])|list %}
+{% if abnormal %}{% for item in abnormal %}
+<div class="finding"><h3>{{ item.name }} · {{ item.status }}</h3><div><b>Result:</b> {{ item.value }} {{ item.unit }}</div><p>{{ item.explanation }}</p><small>Reference range: {% if item.low is defined and item.high is defined and item.low is not none and item.high is not none %}{{ item.low }} – {{ item.high }}{% else %}Not available{% endif %}</small></div>
+{% endfor %}{% else %}<p class="muted">No values were flagged outside a reference interval detected in the report. Values marked “{{ L.review }}” still require checking against the original document.</p>{% endif %}
+{% set review = report.results|selectattr('status','equalto','Needs review')|list %}
+{% if review %}<p class="notice">{{ review|length }} parameter(s) could not be reliably compared with a printed reference interval. Please verify them against the original report.</p>{% endif %}
+</section>
+<section class="panel"><h2>{{ L.insights }}</h2><p>MedExplain identifies report observations from extracted values and the reference intervals printed in the source document. Review the parameter explanations above together rather than interpreting a single value in isolation.</p><p class="muted">This prototype does not establish diagnoses, infer conditions, or replace a clinician's assessment.</p></section>
+<section class="panel"><h2>{{ L.recommend }}</h2><ul><li>Verify every extracted value, unit, and reference interval against the original laboratory report.</li><li>Discuss abnormal or uncertain findings with a qualified healthcare professional, considering symptoms and medical history.</li><li>Use the general guidance shown with each parameter as educational information only; do not start, stop, or change medicines based on this page.</li></ul></section>
+<section class="panel"><h2>{{ L.info }}</h2><p><b>Original report:</b> {{ report.filename }}</p><p><b>Report ID:</b> {{ report.id }}</p><p><b>Upload / analysis date:</b> {{ report.created_at }}</p><p><b>QR Passport:</b> Active secure share link</p></section>
+<section class="notice"><b>{{ L.disclaimer }}</b><br>{{ report.notice|default('MedExplain is an educational prototype, not a diagnostic or treatment system.') }} The information on this page is not a substitute for professional medical advice, diagnosis, or treatment. Seek advice from a qualified healthcare professional.</section>
+</div>
+{% endfor %}
+{% endif %}
+<div class="footer">MedExplain · AI-Powered Health Report Interpreter · Share medical information only with the patient's permission.</div>
+</main>
+<script>
+const consent=document.getElementById('consent'),button=document.getElementById('showRecords'),records=document.getElementById('records');
+if(consent&&button&&records){consent.addEventListener('change',()=>button.disabled=!consent.checked);button.addEventListener('click',()=>{records.hidden=false;button.hidden=true;consent.disabled=true;document.querySelector('.consent').hidden=true;window.scrollTo({top:document.querySelector('.hero').offsetHeight,behavior:'smooth'});});}
+</script>
+</body></html>

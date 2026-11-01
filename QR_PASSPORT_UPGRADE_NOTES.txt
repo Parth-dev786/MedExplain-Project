@@ -1,0 +1,33 @@
+MedExplain QR Passport – Full Report Analysis Upgrade
+
+What changed
+- QR Passport now requires the user to select one saved report before generating a QR code.
+- Each newly generated QR token is linked to that specific report, rather than exposing the patient's entire report history.
+- The scanned page now displays a complete report analysis page: report summary counts, all extracted parameters, reference ranges, status, parameter descriptions, explanations, general guidance, abnormal findings, recommendations, report metadata, and a medical disclaimer.
+- QR links retain the language selected when they are generated (English, Hindi, or Punjabi). Existing report explanation localization is reused.
+- Existing older QR tokens remain readable through a backward-compatible route; newly generated QR tokens are report-specific.
+- QR access can be revoked for the selected report.
+
+Files changed
+- app.py: QR token schema migration, per-report token creation, report-scoped share route, and report-scoped revocation.
+- templates/index.html: report selector and updated QR Passport instructions.
+- static/app.js: load saved reports, generate QR for selected report, and revoke selected report access with CSRF protection.
+- templates/shared_history.html: responsive full report page with consent gate and report analysis sections.
+
+Database
+- On startup, app.py automatically adds report_id and language columns to the existing qr_tokens table if they are missing. Existing reports and user data are not rewritten.
+
+Run
+1. Extract the ZIP.
+2. Open the health_report_interpreter folder.
+3. Install dependencies: pip install -r requirements.txt
+4. Start the app using the existing README / setup script instructions.
+5. Sign in, analyse a report, open QR Passport, select that report, and generate its QR code.
+6. Scan the QR with a phone. For access outside the local computer, the Flask app must be hosted at a reachable HTTPS domain; localhost URLs only work on the same device.
+
+Notes
+- The QR code contains only a secure random URL, not the medical data itself.
+- Anyone who has the active link can view the selected shared report after confirming authorization. Share it only with the patient's permission and revoke it when no longer needed.
+- The report page displays only information already stored by MedExplain's current analysis engine; it does not fabricate diagnoses or additional AI findings.
+- Static headings are translated for English, Hindi, and Punjabi; explanatory report text uses the application's existing translation service and may fall back to English if translation is unavailable.
+- Automated syntax checks passed for app.py and app.js, and the Jinja report template was compiled and sample-rendered. Full Flask integration tests could not be run in this environment because Flask is not installed here.

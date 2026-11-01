@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#eff8f7">
+  <title>MedExplain — Health, made clear</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Noto+Sans+Gurmukhi:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+</head>
+<body>
+<div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
+<div class="app-shell">
+  <aside class="sidebar">
+    <a class="brand" href="#overview" aria-label="MedExplain home"><span class="brand-mark">✚</span><span><b>MedExplain</b><small>HEALTH, MADE CLEAR</small></span></a>
+    <div class="side-label">WORKSPACE</div>
+    <nav class="nav-group" aria-label="Main navigation">
+      <button class="nav active" data-view="overview"><span class="nav-icon">▦</span> Overview</button>
+      <button class="nav" data-view="reports"><span class="nav-icon">▤</span> My reports</button>
+      <button class="nav" data-view="learn"><span class="nav-icon">✧</span> Health library</button>
+      <button class="nav" data-view="history"><span class="nav-icon">◷</span> Medical history</button>
+      <button class="nav" data-view="qr"><span class="nav-icon">▦</span> QR passport</button>
+      <button class="nav" data-view="insurance"><span class="nav-icon">♡</span> Insurance advisor</button>
+      <button class="nav" data-view="medicines"><span class="nav-icon">✚</span> Medicine info</button>
+      <button class="nav" data-view="progress"><span class="nav-icon">↗</span> Health progress</button>
+      <button class="nav" data-view="prescriptions"><span class="nav-icon">▤</span> Prescriptions</button>
+      <button class="nav" data-view="medschedule"><span class="nav-icon">◷</span> Medicine timer</button>
+      <button class="nav" data-view="xrays"><span class="nav-icon">◎</span> X-ray records</button>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="help-card"><div class="help-orb">♡</div><b>Your health matters</b><p>Understand your report and have more informed conversations with your doctor.</p><span class="help-link">Learn with confidence <span>↗</span></span></div>
+      <a class="profile profile-link" href="{{ url_for('profile') }}"><div class="avatar">{{ user_name[:1]|upper }}</div><div><b>{{ user_name }}</b><small>{{ tr('My account') }} · {{ tr('Profile') }}</small></div><span class="online-dot"></span></a>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar"><div class="breadcrumbs"><span>Workspace</span><i>/</i><b id="pageTitle">Overview</b></div><div class="top-actions"><span class="secure"><span class="lock">⌑</span> Signed in securely</span><a class="top-profile" href="{{ url_for('profile') }}">{{ user_name }} · {{ tr('Profile') }}</a><form method="post" action="{{ url_for('logout') }}" class="top-logout"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button type="submit">{{ tr('Logout') }}</button></form><select class="lang" id="langSelect" aria-label="Choose language"><option value="en">English</option><option value="hi">हिन्दी</option><option value="pa">ਪੰਜਾਬੀ</option></select><button class="mobile-menu" id="mobileMenu" aria-label="Toggle navigation">☰</button></div></header>
+
+    <section class="view active-view" id="overviewView">
+      <section class="hero tilt-card">
+        <div class="hero-copy"><div class="welcome-user">{{ tr('Welcome back') }}, {{ user_name|e }} <span class="dashboard-date">· {{ current_date }}</span></div><div class="eyebrow"><span class="pulse-dot"></span> YOUR PERSONAL HEALTH COMPANION</div><h1>Health, made<br><em>understandable.</em></h1><p>Turn complex lab numbers into clear, simple explanations — one result at a time.</p><div class="hero-actions"><button class="hero-cta" id="heroUpload">Explore your report <span>→</span></button><span class="hero-note"><span class="tiny-shield">✓</span> Education-first · Doctor-guided</span></div></div>
+        <div class="hero-visual" aria-hidden="true"><div class="visual-grid"></div><div class="orbit orbit-a"></div><div class="orbit orbit-b"></div><div class="medical-glass"><div class="glass-shine"></div><span class="medical-cross">✚</span><span class="glass-caption">HEALTH<br>INSIGHTS</span></div><div class="float-chip chip-top"><span class="chip-dot mint-dot"></span> Clear insights</div><div class="float-chip chip-bottom"><span class="chip-mini">↗</span> Understand better</div><div class="tiny-spark spark-a">✦</div><div class="tiny-spark spark-b">✧</div></div>
+      </section>
+
+      <section class="stats">
+        <article class="stat-card tilt-card"><div class="stat-top"><span>Reports analysed</span><span class="stat-icon icon-blue">▤</span></div><strong id="reportCount">0</strong><small>Your session history</small><div class="stat-foot"><span class="stat-line blue-line"></span><span>Session activity</span></div></article>
+        <article class="stat-card tilt-card"><div class="stat-top"><span>Parameters found</span><span class="stat-icon icon-mint">⌁</span></div><strong id="parameterCount">—</strong><small>In your latest report</small><div class="stat-foot"><span class="stat-line mint-line"></span><span>Supported tests only</span></div></article>
+        <article class="stat-card tilt-card"><div class="stat-top"><span>Need a closer look</span><span class="stat-icon icon-amber">◎</span></div><strong id="flaggedCount">—</strong><small>Review with a professional</small><div class="stat-foot"><span class="stat-line amber-line"></span><span>Not a diagnosis</span></div></article>
+      </section>
+
+      <section class="quick-actions-section"><div class="section-title"><div><div class="eyebrow">WORKSPACE SHORTCUTS</div><h2>{{ tr('Quick actions') }}</h2></div></div><div class="quick-actions-grid">
+        <button type="button" class="quick-action" data-goto="overview" data-scroll="uploadArea"><span class="quick-action-icon qa-teal">↑</span><b>{{ tr('Upload medical report') }}</b><small>PDF · Image</small></button>
+        <button type="button" class="quick-action" data-goto="prescriptions"><span class="quick-action-icon qa-blue">▤</span><b>{{ tr('Upload prescription') }}</b><small>OCR reader</small></button>
+        <button type="button" class="quick-action" data-goto="medschedule"><span class="quick-action-icon qa-amber">◷</span><b>{{ tr('Medicine reminders') }}</b><small>Alarm & schedule</small></button>
+        <button type="button" class="quick-action" data-goto="history"><span class="quick-action-icon qa-purple">⌁</span><b>{{ tr('Medical history') }}</b><small>Saved reports</small></button>
+        <button type="button" class="quick-action" data-goto="qr"><span class="quick-action-icon qa-rose">▦</span><b>{{ tr('QR passport') }}</b><small>Secure sharing</small></button>
+        <button type="button" class="quick-action" data-goto="progress"><span class="quick-action-icon qa-green">↗</span><b>{{ tr('Health progress') }}</b><small>Compare reports</small></button>
+      </div></section>
+
+      <section class="content-grid" id="uploadArea">
+        <div class="panel upload-panel glass-panel"><div class="panel-heading"><div><div class="eyebrow">GET STARTED <span class="eyebrow-line"></span></div><h2>Understand a report</h2><p>Upload a laboratory report to begin your explanation.</p></div><span class="step-pill">01 <i>/</i> UPLOAD</span></div>
+          <form id="uploadForm"><label class="dropzone" id="dropzone" for="reportFile"><div class="upload-illustration"><span class="upload-arrow">↑</span><span class="upload-ring"></span></div><b>Drop your report here</b><span>or <u>browse files</u> from your device</span><small>PDF, PNG, JPG or WEBP <i>·</i> Max 25 MB</small><input type="file" id="reportFile" name="report" accept=".pdf,.png,.jpg,.jpeg,.webp" hidden></label>
+            <div class="file-row" id="fileRow" hidden><span class="file-icon">▤</span><span id="fileName"></span><button type="button" id="removeFile" aria-label="Remove file">✕</button></div>
+            <div class="progress-wrap" id="progressWrap" hidden><div class="progress-label"><span id="progressText">Reading your report…</span><span class="progress-percent">WORKING</span></div><div class="progress-track"><span></span></div></div>
+            <button class="primary-btn" id="analyzeBtn" type="submit">Analyse my report <span>→</span></button>
+          </form>
+          <div class="or-line"><span>OR TRY A DEMO</span></div><button class="demo-btn" id="demoBtn"><span class="demo-icon">✧</span> Explore a sample multi-page report <span class="demo-arrow">↗</span></button>
+          <div class="privacy-note"><span>⌑</span> Uploaded files are processed by this demo server and deleted after analysis.</div>
+        </div>
+        <div class="panel side-panel glass-panel"><div class="panel-heading"><div><div class="eyebrow">THE PROCESS</div><h2>Clarity in 3 steps</h2></div><span class="spark">✳</span></div>
+          <div class="steps"><div class="step"><div class="step-num">01</div><div><b>Upload your report</b><p>Add a PDF or a clear photo of your laboratory report.</p></div><span class="step-check">↗</span></div><div class="step"><div class="step-num">02</div><div><b>We read the numbers</b><p>Every page is scanned for supported test names, values and printed ranges.</p></div><span class="step-check">↗</span></div><div class="step"><div class="step-num">03</div><div><b>Understand the meaning</b><p>Explore plain-language explanations and health education.</p></div><span class="step-check">↗</span></div></div>
+          <div class="safety-card"><span class="safety-icon">✦</span><div><b>Education, not diagnosis</b><p>MedExplain does not diagnose, prescribe or replace a qualified doctor.</p></div></div>
+        </div>
+      </section>
+
+      <section class="results-section" id="resultsSection" hidden><div class="results-head"><div><div class="eyebrow">YOUR REPORT INSIGHTS</div><h2>Here's what your report says</h2><p id="resultFilename">Analysis complete</p></div><button class="outline-btn" id="newReportBtn">＋ New report</button></div><div class="result-summary" id="resultSummary"></div><div class="results-layout"><div class="panel parameters-panel glass-panel"><div class="panel-heading"><div><h2>Parameter breakdown</h2><p>Choose a result to explore its explanation.</p></div><span class="step-pill">REPORT DATA</span></div><div class="parameter-toolbar"><span>DETECTED PARAMETERS</span><span id="parameterTotalLabel">0 results</span></div><div id="parameterList" class="parameter-list"></div></div><div class="panel explain-panel glass-panel"><div class="eyebrow">PLAIN-LANGUAGE EXPLANATION</div><div id="explanationContent"><div class="empty-explain"><span>✧</span><b>Your insights will appear here</b><p>Select a parameter from the report.</p></div></div></div></div><div class="disclaimer" id="disclaimer"></div></section>
+      <section class="learn-section"><div class="section-title"><div><div class="eyebrow">LEARN WITHOUT THE JARGON</div><h2>Know your body better</h2></div><button class="text-link" data-goto="learn">Explore health library ↗</button></div><div class="learn-cards"><article class="learn-card liver-card tilt-card"><div class="learn-symbol liver">◉</div><span class="learn-kicker">ORGAN GUIDE</span><b>Your liver</b><p>Processes nutrients, helps remove waste and produces important proteins.</p><span class="card-arrow">↗</span></article><article class="learn-card kidney-card tilt-card"><div class="learn-symbol kidney">◒</div><span class="learn-kicker">ORGAN GUIDE</span><b>Your kidneys</b><p>Filter waste and extra fluid from your blood to make urine.</p><span class="card-arrow">↗</span></article><article class="learn-card heart-card tilt-card"><div class="learn-symbol heart">♡</div><span class="learn-kicker">ORGAN GUIDE</span><b>Your heart</b><p>Moves blood around your body, delivering oxygen and nutrients.</p><span class="card-arrow">↗</span></article></div></section>
+    </section>
+
+    <section class="view secondary-view" id="reportsView" hidden><div class="page-intro"><div class="eyebrow">YOUR WORKSPACE</div><h1>My <em>reports.</em></h1><p>Keep track of the reports analysed during this demo session.</p></div><div class="panel glass-panel report-history"><div class="panel-heading"><div><h2>Recent analysis</h2><p>Reports analysed in this workspace are saved to your medical history.</p></div><span class="step-pill">SESSION LOG</span></div><div id="historyContent" class="history-empty"><span>▤</span><b>No reports yet</b><p>Upload a report or explore the sample report to see your analysis history here.</p><button class="primary-btn compact" data-goto="overview">Analyse a report <span>→</span></button></div></div></section>
+
+    <section class="view secondary-view" id="learnView" hidden><div class="page-intro"><div class="eyebrow">LEARN WITHOUT THE JARGON</div><h1>Health <em>library.</em></h1><p>Simple educational guides to help you understand common organs and laboratory tests.</p></div><div class="library-grid"><article class="library-card"><div class="library-art art-liver">◉</div><span class="learn-kicker">ORGAN GUIDE</span><h2>Liver function</h2><p>The liver helps process nutrients, break down substances and make proteins. Tests such as ALT and AST can provide information about liver cells.</p><span class="library-tag">ALT · AST · Bilirubin</span></article><article class="library-card"><div class="library-art art-kidney">◒</div><span class="learn-kicker">ORGAN GUIDE</span><h2>Kidney function</h2><p>The kidneys filter waste and extra fluid from blood. Creatinine and eGFR are among the measures used to assess kidney function.</p><span class="library-tag">Creatinine · Urea · eGFR</span></article><article class="library-card"><div class="library-art art-heart">♡</div><span class="learn-kicker">ORGAN GUIDE</span><h2>Heart & lipids</h2><p>Lipid tests measure different fats in blood. Their interpretation depends on the full health context and a clinician's assessment.</p><span class="library-tag">LDL · HDL · Triglycerides</span></article><article class="library-card"><div class="library-art art-blood">✣</div><span class="learn-kicker">TEST GUIDE</span><h2>Complete blood count</h2><p>A CBC measures components of blood, including red cells, white cells and platelets. It is interpreted alongside symptoms and other findings.</p><span class="library-tag">Hemoglobin · WBC · Platelets</span></article></div><div class="library-note"><span>ⓘ</span><p>These guides are general education only. They do not interpret your personal results or replace advice from a qualified healthcare professional.</p></div></section>
+
+
+    <section class="view secondary-view" id="historyView" hidden>
+      <div class="page-intro"><div class="eyebrow">YOUR SECURE RECORD</div><h1>Medical <em>history.</em></h1><p>Reports are saved to this browser session's patient workspace and remain available after restarting the server.</p></div>
+      <div class="panel glass-panel"><div class="panel-heading"><div><h2>Previous reports</h2><p>Chronological record of analysed reports.</p></div><button class="outline-btn" id="refreshHistory">Refresh history</button></div><div id="persistentHistory" class="history-list">Loading saved reports…</div></div>
+    </section>
+    <section class="view secondary-view" id="qrView" hidden>
+      <div class="page-intro"><div class="eyebrow">SECURE MEDICAL PASSPORT</div><h1>Your history, <em>one scan away.</em></h1><p>Generate a revocable QR Passport for one selected report. The QR contains only a secure random URL, never medical details.</p></div>
+      <div class="feature-grid">
+        <div class="panel glass-panel"><h2>Generate QR passport</h2><p>Select a saved report to create a secure link to its complete analysis. Each QR Passport shares only the selected report.</p><label for="qrReportSelect"><b>Select medical report</b></label><select id="qrReportSelect" class="form-control" style="width:100%;margin:12px 0;padding:12px;border:1px solid #dbe5ef;border-radius:10px"><option value="">Loading saved reports…</option></select><button class="primary-btn" id="generateQr">Generate report QR code →</button><div id="qrOutput" class="qr-output"></div><button class="outline-btn" id="revokeQr">Revoke selected report access</button></div>
+        <div class="panel glass-panel"><h2>Scan a QR code</h2><p>Use a supported browser camera to scan a MedExplain QR code.</p><video id="qrVideo" playsinline></video><div class="action-row"><button class="outline-btn" id="startScanner">Start camera</button><button class="outline-btn" id="stopScanner">Stop camera</button></div><p id="scanResult" class="muted"></p></div>
+      </div>
+      <p class="notice">Privacy note: anyone who receives an active QR link can request access to the shared history. Share it only with people you trust. Revoke it when no longer needed.</p>
+    </section>
+    <section class="view secondary-view" id="insuranceView" hidden>
+      <div class="page-intro"><div class="eyebrow">COVERAGE EDUCATION</div><h1>Health insurance <em>advisor.</em></h1><p>Compare policy features and learn what to verify before purchasing.</p></div>
+      <div class="panel glass-panel"><h2>Tell us what matters to you</h2><div class="form-grid">
+        <label>Age<input id="insAge" type="number" min="18" max="100" placeholder="e.g. 28"></label>
+        <label>City<input id="insCity" placeholder="e.g. Ludhiana"></label>
+        <label>Family members<input id="insMembers" type="number" min="1" max="12" value="1"></label>
+        <label>Coverage type<select id="insType"><option>Individual</option><option>Family floater</option></select></label>
+        <label>Preferred cover<select id="insCover"><option>₹5 lakh</option><option>₹10 lakh</option><option>₹15 lakh</option><option>₹25 lakh</option></select></label>
+        <label>Annual budget (optional)<input id="insBudget" type="number" min="0" placeholder="INR"></label>
+      </div><button class="primary-btn" id="compareInsurance">Show comparison guide →</button><div id="insuranceResults"></div></div>
+      <p class="notice">The included comparison entries are explicitly fictional demo data, not real insurer products, prices, quotes or recommendations. Always verify current policy wording with an insurer or licensed advisor.</p>
+    </section>
+    <section class="view secondary-view" id="medicinesView" hidden>
+      <div class="page-intro"><div class="eyebrow">EDUCATIONAL MEDICINE LIBRARY</div><h1>Medicine <em>information.</em></h1><p>Search general information and safety cautions. This tool does not prescribe or select treatment.</p></div>
+      <div class="panel glass-panel"><div class="search-row"><input id="medicineSearch" placeholder="Search e.g. paracetamol, diabetes, cholesterol"><button class="primary-btn" id="searchMedicine">Search</button></div><div id="medicineResults"></div></div>
+      <p class="notice">Never start, stop or change a medicine based on this page. Confirm suitability, dose, interactions and contraindications with a qualified doctor or pharmacist.</p>
+    </section>
+    <section class="view secondary-view" id="progressView" hidden>
+      <div class="page-intro"><div class="eyebrow">LONGITUDINAL HEALTH RECORD</div><h1>Health <em>progress.</em></h1><p>Compare the two most recent analysed reports for each matching parameter.</p></div>
+      <div class="panel glass-panel"><div class="panel-heading"><div><h2>Previous vs current</h2><p>Only parameters found in at least two reports are shown.</p></div><button class="outline-btn" id="refreshProgress">Refresh</button></div><div id="progressResults">Loading trends…</div></div>
+      <p class="notice">A numerical change does not automatically mean improvement. Values are comparable only when units, test methods, reference intervals and clinical context are suitable. Review trends with a clinician.</p>
+    </section>
+    <section class="view secondary-view" id="prescriptionsView" hidden>
+      <div class="page-intro"><div class="eyebrow">DOCTOR-GIVEN INSTRUCTIONS</div><h1>Prescription <em>reader.</em></h1><p>Upload a prescription to extract readable text. Verify every medicine and instruction against the original with your doctor or pharmacist.</p></div>
+      <div class="panel glass-panel"><h2>Upload prescription</h2><form id="prescriptionForm"><label class="upload-inline">Choose prescription (PDF/JPG/PNG/WEBP)<input type="file" id="prescriptionFile" name="prescription" accept=".pdf,.png,.jpg,.jpeg,.webp" required></label><button class="primary-btn" type="submit">Read prescription →</button></form><div id="prescriptionOutput"></div></div>
+      <p class="notice">For best results, upload a straight, sharply focused, well-lit scan. OCR may misread handwriting, medicine names, strengths and timing. This feature does not create a prescription. Do not follow extracted instructions until a qualified professional confirms them.</p>
+    </section>
+    <section class="view secondary-view" id="medscheduleView" hidden>
+      <div class="page-intro"><div class="eyebrow">PRESCRIBED MEDICINE SCHEDULE</div><h1>Medicine <em>timer.</em></h1><p>Add only instructions confirmed from your doctor's prescription.</p></div>
+      <div class="panel glass-panel"><h2>Alarm settings</h2>
+        <div class="alarm-settings"><button class="primary-btn" type="button" id="enableAlarm">Enable alarm sound</button><button class="outline-btn" type="button" id="testAlarm">Test buzzer</button><label class="volume-control">Alarm volume <input id="alarmVolume" type="range" min="0" max="100" value="75"><span id="alarmVolumeValue">75%</span></label></div>
+        <p class="notice">Keep this MedExplain tab open. Enable sound once after opening the app because browsers block audio until you interact with the page. Browser alarms cannot ring when the browser is closed.</p>
+      </div>
+      <div class="panel glass-panel"><h2>Add confirmed schedule</h2><form id="scheduleForm" class="form-grid">
+        <label>Medicine name<input id="schName" required maxlength="120" placeholder="As written on prescription"></label>
+        <label>Strength (optional)<input id="schStrength" placeholder="e.g. 500 mg"></label>
+        <label>Tablets per dose<input id="schQty" type="number" min="0.25" max="50" step="0.25" value="1" required></label>
+        <label>Time<input id="schTime" type="time" required></label>
+        <label>Start date<input id="schStart" type="date" required></label>
+        <label>End date<input id="schEnd" type="date" required></label>
+        <label>Food instructions<select id="schFood"><option value="As prescribed">As prescribed</option><option value="Before food">Before food</option><option value="After food">After food</option><option value="With food">With food</option></select></label>
+        <label class="wide-field">Other instructions (optional)<input id="schInstructions" placeholder="Only copy confirmed instructions"></label>
+        <label class="wide-field confirm-line"><input id="schConfirm" type="checkbox" required> I have checked these details against the doctor's prescription.</label>
+        <button class="primary-btn" type="submit">Save medicine schedule →</button>
+      </form><div class="notice">The schedule is a reminder tool, not a dose calculator. Do not change the prescribed quantity or timing based on this app.</div></div>
+      <div class="panel glass-panel"><div class="panel-heading"><div><h2>Today's schedule</h2><p>Mark doses after following your clinician's instructions.</p></div><button class="outline-btn" id="refreshSchedules">Refresh</button></div><div id="scheduleList">Loading schedules…</div></div>
+    </section>
+    <section class="view secondary-view" id="xraysView" hidden>
+      <div class="page-intro"><div class="eyebrow">MEDICAL IMAGING RECORDS</div><h1>X-ray <em>library.</em></h1><p>Upload and organize images for discussion with a qualified radiologist.</p></div>
+      <div class="panel glass-panel"><h2>Upload X-ray image</h2><form id="xrayForm"><div class="form-grid"><label>Image type<select id="xrayType"><option>Chest X-ray</option><option>Hand X-ray</option><option>Knee X-ray</option><option>Other / unsure</option></select></label><label>Image file<input type="file" id="xrayFile" accept=".png,.jpg,.jpeg,.webp" required></label></div><button class="primary-btn" type="submit">Save X-ray record →</button></form><div id="xrayOutput"></div></div>
+      <div class="panel glass-panel"><h2>Previous X-ray records</h2><div id="xrayList">Loading records…</div></div>
+      <p class="notice">This version stores X-ray images but does not interpret or diagnose them. AI image interpretation requires a validated model, appropriate image quality checks and radiologist oversight.</p>
+    </section>
+    <footer>MedExplain <span>Built to empower, not diagnose.</span></footer>
+  </main>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="alarm-overlay" id="medicineAlarm" hidden role="alertdialog" aria-modal="true" aria-labelledby="alarmTitle">
+  <div class="alarm-dialog"><div class="alarm-pulse">◷</div><div class="eyebrow">MEDEXPLAIN MEDICINE REMINDER</div><h2 id="alarmTitle">Time to Take Your Medicine!</h2>
+    <h3 id="alarmMedicineName">Medicine name</h3><p id="alarmMedicineDose"></p><p id="alarmMedicineInstructions" class="muted"></p><p id="alarmScheduledTime" class="alarm-time"></p>
+    <div class="alarm-actions"><button class="primary-btn stop-alarm" id="stopAlarm" type="button">Stop alarm</button><button class="outline-btn" id="snoozeAlarm" type="button">Snooze 5 minutes</button></div>
+  </div>
+</div>
+<script>window.MEDEX_INITIAL_LANGUAGE = {{ initial_language|tojson }};</script>
+<script src="{{ url_for('static', filename='language.js') }}"></script>
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+</body></html>
